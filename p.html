@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Analyzer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 520px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 20px; font-size: 24px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #666; font-weight: 600; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #5a6fd6; }
+        
+        .result-card {
+            margin-top: 20px;
+            padding: 20px;
+            border-left: 5px solid #ccc;
+            background: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+        }
+        .result-card h3 { margin-bottom: 10px; color: #333; }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .image-container { text-align: center; margin-top: 20px; }
+        #studentImg {
+            width: 150px;
+            transition: transform 0.3s ease;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Student Performance Analyzer</h1>
+        
+        <div class="form-group">
+            <label>Student Name:</label>
+            <input type="text" id="studentName" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label>Assignments Completed:</label>
+            <input type="number" id="assignments" placeholder="e.g. 8">
+        </div>
+        <div class="form-group">
+            <label>Quiz Score:</label>
+            <input type="number" id="quizScore" placeholder="e.g. 85">
+        </div>
+        <div class="form-group">
+            <label>Attendance Percentage (%):</label>
+            <input type="number" id="attendance" placeholder="e.g. 75">
+        </div>
+
+        <button id="analyzeBtn">Analyze Performance</button>
+
+        <div id="resultCard" class="result-card">
+            <h3>Analysis Result:</h3>
+            <p><strong>Name:</strong> <span id="resName"></span></p>
+            <p><strong>Assignments:</strong> <span id="resAssign"></span></p>
+            <p><strong>Quiz Score:</strong> <span id="resQuiz"></span></p>
+            <p><strong>Attendance:</strong> <span id="resAttend"></span>%</p>
+            <p><strong>Performance Status:</strong> <span id="resStatus" class="status-badge"></span></p>
+        </div>
+
+        <div class="image-container">
+            <img id="studentImg" src="https://picsum.photos/150" alt="Student Placeholder Image">
+            <p style="color: #666; font-size: 12px; margin-top: 5px;">Hover over the image to zoom</p>
+        </div>
+    </div>
+
+    <script>
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const studentImg = document.getElementById('studentImg');
+
+        analyzeBtn.addEventListener('click', function() {
+            const name = document.getElementById('studentName').value;
+            const assignments = parseInt(document.getElementById('assignments').value);
+            const quiz = parseInt(document.getElementById('quizScore').value);
+            const attendance = parseInt(document.getElementById('attendance').value);
+
+            if (!name || isNaN(assignments) || isNaN(quiz) || isNaN(attendance)) {
+                alert("Please fill all fields correctly!");
+                return;
+            }
+
+            let status = "";
+            let color = "";
+
+            if (attendance < 50) {
+                status = "Warning";
+                color = "red";
+            } else if (quiz > 80 && assignments >= 8) {
+                status = "Excellent";
+                color = "green";
+            } else if (quiz >= 50 && quiz <= 79) {
+                status = "Average";
+                color = "orange";
+            } else {
+                status = "Needs Improvement";
+                color = "red";
+            }
+
+            document.getElementById('resName').innerText = name;
+            document.getElementById('resAssign').innerText = assignments;
+            document.getElementById('resQuiz').innerText = quiz;
+            document.getElementById('resAttend').innerText = attendance;
+            
+            const statusBadge = document.getElementById('resStatus');
+            statusBadge.innerText = status;
+            statusBadge.style.backgroundColor = color;
+
+            document.getElementById('resultCard').style.display = "block";
+        });
+
+        // Image Hover Effect
+        studentImg.addEventListener('mouseover', function() {
+            studentImg.style.transform = "scale(1.3)";
+        });
+
+        studentImg.addEventListener('mouseleave', function() {
+            studentImg.style.transform = "scale(1.0)";
+        });
+    </script>
+</body>
+</html>

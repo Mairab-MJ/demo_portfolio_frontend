@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1> image gallery</h1>
+        <p>click any image to open </p>
+    </header>
+
+    <div class="filters" id="filters"> </div>
+    <div class="gallery" id="gallery"> </div>
+<div class="lightbox" id="lightbox" role="dialog" aria-model="true"aria-label="imageviewer">
+    <div class="lb-backdrop" id="lb-backdrop"></div> 
+    <div class="lb-box">
+      <button class="lb-close" id="lb-close" aria-label="Close">✕</button>
+      <div class="lb-display" id="lb-display"></div>
+      <div class="lb-info">
+        <div class="lb-title" id="lb-title"></div>
+        <div class="lb-meta" id="lb-meta"></div>
+
+    </div>
+              <div class="lb-nav">
+        <button class="lb-nav-btn" id="lb-prev">← Prev</button>
+        <span class="lb-counter" id="lb-counter"></span>
+        <button class="lb-nav-btn" id="lb-next">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const images=[
+        {
+            title:"mountain sunrise" , cat:"nature" , emoji:"🌄" , color:"1a3a2a", desc:"alps, switzerland"} 
+                  { title: "City Skyline",      cat: "City",    emoji: "🌆",  color: "#0d2233", desc: "New York, USA"     },
+      { title: "Forest Path",       cat: "Nature",  emoji: "🌲",  color: "#1a2e1a", desc: "Black Forest, DE"  },
+      { title: "Street Café",       cat: "City",    emoji: "☕",  color: "#2a1a0d", desc: "Paris, France"     },
+      { title: "Ocean Wave",        cat: "Nature",  emoji: "🌊",  color: "#0d1f33", desc: "Maldives"          },
+      { title: "Night Market",      cat: "City",    emoji: "🏮",  color: "#2a0d2a", desc: "Bangkok, Thailand" },
+      { title: "Waterfall",         cat: "Nature",  emoji: "💧",  color: "#0d2a33", desc: "Iceland"           },
+      { title: "Architecture",      cat: "City",    emoji: "🏛",  color: "#1a1a2a", desc: "Rome, Italy"       },
+      { title: "Autumn Leaves",     cat: "Nature",  emoji: "🍂",  color: "#2a1a0d", desc: "Kyoto, Japan"      },
+      { title: "Harbor View",       cat: "City",    emoji: "⛵",  color: "#0d1a2a", desc: "Sydney, Australia" },
+      { title: "Desert Dunes",      cat: "Nature",  emoji: "🏜",  color: "#2a220d", desc: "Sahara, Morocco"   },
+      { title: "Old Town",          cat: "City",    emoji: "🏰",  color: "#1f0d0d", desc: "Prague, Czech"     },
+    ];
+
+    // ── SETUP ────────────────────────────────────────
+    const categories = ["All", ...new Set(images.map(i => i.cat))];
+    let currentFilter = "All";
+    let lightboxIndex = 0;
+
+    const filtersEl  = document.getElementById("filters");
+    const galleryEl  = document.getElementById("gallery");
+    const lightboxEl = document.getElementById("lightbox");
+    const lbDisplay  = document.getElementById("lb-display");
+    const lbTitle    = document.getElementById("lb-title");
+    const lbMeta     = document.getElementById("lb-meta");
+    const lbCounter  = document.getElementById("lb-counter");
+
+    // ── BUILD FILTER BUTTONS ─────────────────────────
+    categories.forEach(cat => {
+      const btn = document.createElement("button");
+      btn.className = "filter-btn" + (cat === "All" ? " active" : "");
+      btn.textContent = cat;
+      btn.addEventListener("click", () => applyFilter(cat, btn));
+      filtersEl.appendChild(btn);
+    });
+
+    // ── BUILD GALLERY CARDS ──────────────────────────
+    images.forEach((img, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `Open ${img.title}`);
+      card.dataset.cat = img.cat;
+
+      card.innerHTML = `
+        <div class="card-img" style="background:${img.color}">${img.emoji}</div>
+        <div class="card-badge">${img.cat}</div>
+        <div class="card-overlay">
+          <div class="card-title">${img.title}</div>
+          <div class="card-cat">${img.desc}</div>
+        </div>
+      `;
+
+      // Click to open lightbox
+      card.addEventListener("click", () => openLightbox(index));
+      // Keyboard: Enter to open
+      card.addEventListener("keydown", e => {
+        if (e.key === "Enter") openLightbox(index);
+      });
+
+      galleryEl.appendChild(card);
+    });
+
+    // ── FILTER FUNCTION ──────────────────────────────
+    function applyFilter(cat, clickedBtn) {
+      currentFilter = cat;
+
+      // Update active button style
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      clickedBtn.classList.add("active");
+
+      // Show/hide cards
+      document.querySelectorAll(".card").forEach((card, i) => {
+        const matches = cat === "All" || images[i].cat === cat;
+        card.classList.toggle("hidden", !matches);
+      });
+    }
+
+    // ── LIGHTBOX OPEN ─────────────────────────────────
+    function openLightbox(index) {
+      lightboxIndex = index;
+      updateLightbox();
+      lightboxEl.classList.add("open");
+      document.body.style.overflow = "hidden"; // Prevent background scroll
+    }
+
+    // ── LIGHTBOX CLOSE ────────────────────────────────
+    function closeLightbox() {
+      lightboxEl.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    // ── UPDATE LIGHTBOX CONTENT ───────────────────────
+    function updateLightbox() {
+      const img = images[lightboxIndex];
+      lbDisplay.style.background = img.color;
+      lbDisplay.textContent = img.emoji;
+      lbTitle.textContent = img.title;
+      lbMeta.textContent = img.desc + " · " + img.cat;
+      lbCounter.textContent = (lightboxIndex + 1) + " / " + images.length;
+    }
+
+    // ── NEXT / PREV ───────────────────────────────────
+    function goNext() {
+      lightboxIndex = (lightboxIndex + 1) % images.length;
+      updateLightbox();
+    }
+
+    function goPrev() {
+      lightboxIndex = (lightboxIndex - 1 + images.length) % images.length;
+      updateLightbox();
+    }
+
+    // ── EVENT LISTENERS ───────────────────────────────
+    document.getElementById("lb-close").addEventListener("click", closeLightbox);
+    document.getElementById("lb-backdrop").addEventListener("click", closeLightbox);
+    document.getElementById("lb-next").addEventListener("click", goNext);
+    document.getElementById("lb-prev").addEventListener("click", goPrev);
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", e => {
+      if (!lightboxEl.classList.contains("open")) return;
+      if (e.key === "ArrowRight") goNext();
+      if (e.key === "ArrowLeft")  goPrev();
+      if (e.key === "Escape")     closeLightbox();
+    });
+  </script>
+</body>
+</html>
+
+        
+    
+  

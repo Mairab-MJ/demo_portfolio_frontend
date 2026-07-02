@@ -1,0 +1,502 @@
+/* ================================
+   1. ROOT VARIABLES — sab colors/fonts ek jagah
+   Yahan change karo to poori site ka theme badal jaye
+================================ */
+:root {
+  --bg: #0d1117;          /* poore page ka background — hamesha dark rahega */
+  --bg-alt: #10141c;
+  --card: #161b26;
+  --text: #e6edf3;
+  --text-dim: #8b96a8;
+  --accent: #7ee787;      /* terminal green — SIRF highlights/buttons/glow ke liye, background nahi */
+  --accent2: #f9c74f;     /* warm yellow accent */
+  --accent3: #7aa2f7;     /* soft blue accent, glow mix ke liye */
+  --danger: #ff6b6b;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+  --radius: 14px;
+}
+
+/* ================================
+   2. RESET — browser ke default spacing hata do
+================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth; /* <-- YE HI HAI "smooth scroll" ka jaadu, JS ki zaroorat nahi */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Soft glowing "blobs" floating behind the content — eye-catching but subtle.
+   Concept: 2 blurred colored circles, positioned absolute, slowly drifting. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.18;
+  z-index: -1;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+body::before {
+  background: var(--accent);
+  top: -100px;
+  left: -100px;
+}
+body::after {
+  background: var(--accent3);
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 4s;
+}
+@keyframes drift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(60px, 40px); }
+}
+
+/* ================================
+   3. NAVBAR
+================================ */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 6%;
+  background: rgba(24, 24, 37, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  border-bottom: 1px solid #313244;
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+.nav-logo .dot { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  transition: color 0.25s ease; /* hover effect smooth banane ke liye */
+}
+.nav-links a:hover { color: var(--accent); }
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* ================================
+   4. HERO / TERMINAL
+================================ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 100px 6% 40px;
+}
+
+/* Two columns: terminal on left, photo on right.
+   On mobile this collapses to one column (see media query below). */
+.hero-grid {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.terminal {
+  width: 100%;
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+/* ---- PHOTO CARD ---- */
+.photo-wrap {
+  position: relative;
+  max-width: 340px;
+  margin: 0 auto;
+  transition: transform 0.15s ease; /* JS mousemove tilt yahan se smooth hota hai */
+  transform-style: preserve-3d;
+}
+
+.photo-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 24px;
+  border: 3px solid var(--accent);
+  position: relative;
+  z-index: 2;
+}
+
+/* Blurred glow sitting behind the photo — gives that "eye-catching" pop */
+.photo-glow {
+  position: absolute;
+  inset: -20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  border-radius: 30px;
+  filter: blur(30px);
+  opacity: 0.5;
+  z-index: 1;
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.65; }
+}
+
+/* Floating badges around the photo — small pills that gently bob up/down */
+.badge {
+  position: absolute;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  padding: 8px 14px;
+  border-radius: 30px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  z-index: 3;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+  animation: bob 4s ease-in-out infinite;
+}
+.badge-1 { top: 10px;    left: -30px;  animation-delay: 0s; }
+.badge-2 { bottom: 40px; right: -25px; animation-delay: 1.3s; }
+    .badge-3 { bottom: -15px; left: 20px;  animation-delay: 2.6s; }
+    .badge-4 { top: 20px;    right: -30px; animation-delay: 3.9s; }
+    .badge-5 { bottom: 20px; left: -25px;  animation-delay: 5.2s; }
+    .badge-6 { top: -15px;   right: 20px;  animation-delay: 6.5s; } 
+
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #313244;
+}
+
+.tdot { width: 11px; height: 11px; border-radius: 50%; }
+.tdot.red { background: var(--danger); }
+.tdot.yellow { background: var(--accent2); }
+.tdot.green { background: var(--accent); }
+
+.terminal-title {
+  margin-left: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.terminal-body {
+  padding: 40px 30px;
+  font-family: var(--font-mono);
+}
+
+.prompt { color: var(--accent); margin-right: 6px; }
+
+.typed-line {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  color: var(--text);
+  min-height: 1.4em;
+  border-right: 3px solid var(--accent); /* blinking cursor look */
+  animation: blink 0.8s step-end infinite;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+.hero-sub {
+  margin-top: 14px;
+  color: var(--text-dim);
+  font-family: var(--font-sans);
+}
+
+.hero-buttons {
+  margin-top: 28px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ================================
+   5. BUTTONS — hover effects yahan
+================================ */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #111;
+}
+.btn-primary:hover {
+  transform: translateY(-3px);           /* upar uthta hai on hover */
+  box-shadow: 0 10px 20px rgba(126,231,135,0.3);
+}
+
+.btn-outline {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+.btn-outline:hover {
+  background: var(--accent);
+  color: #111;
+  transform: translateY(-3px);
+}
+
+/* ================================
+   6. SECTIONS (generic)
+================================ */
+.section {
+  padding: 100px 6%;
+}
+.alt-bg { background: var(--bg-alt); }
+
+.section-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.section-title .tag {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+/* ================================
+   7. SKILLS
+================================ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.skill-card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: var(--radius);
+  transition: transform 0.25s ease; /* hover uplift */
+}
+.skill-card:hover { transform: translateY(-6px); }
+
+.skill-card h3 { font-family: var(--font-mono); margin-bottom: 12px; }
+
+.bar {
+  background: #313244;
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 6px;
+}
+
+/* ================================
+   8. PROJECTS
+================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.project-card {
+  background: var(--card);
+  padding: 28px;
+  border-radius: var(--radius);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+}
+
+.project-thumb { font-size: 2.2rem; margin-bottom: 14px; }
+.project-card h3 { font-family: var(--font-mono); margin-bottom: 8px; }
+.project-card p { color: var(--text-dim); font-size: 0.92rem; margin-bottom: 16px; }
+
+.project-links a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-right: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.project-links a:hover { text-decoration: underline; }
+
+/* ================================
+   9. RESUME
+================================ */
+.resume-box {
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--card);
+  padding: 40px;
+  border-radius: var(--radius);
+}
+.resume-box p { margin-bottom: 20px; color: var(--text-dim); }
+
+.resume-preview {
+  width: 100%;
+  height: 400px;         /* preview box ki height — chaho to badha/ghata sakte ho */
+  border: 1px solid #313244;
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  background: #fff;      /* PDF ka background white hi acha lagta hai */
+}
+
+/* ================================
+   10. CONTACT FORM
+================================ */
+.contact-form {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  background: var(--card);
+  border: 1px solid #313244;
+  border-radius: var(--radius);
+  padding: 14px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  resize: none;
+  transition: border-color 0.2s ease;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.socials {
+  text-align: center;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+.socials a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  transition: color 0.2s ease;
+}
+.socials a:hover { color: var(--accent); }
+
+/* ================================
+   11. FOOTER
+================================ */
+.footer {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  border-top: 1px solid #313244;
+}
+
+/* ================================
+   12. SCROLL REVEAL ANIMATION
+   (JS ye class add/remove karega scroll pe)
+================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================================
+   13. RESPONSIVE — mobile ke liye
+================================ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: block; }
+
+  .nav-links.show {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 6%;
+    background: var(--card);
+    padding: 20px;
+    border-radius: var(--radius);
+    gap: 16px;
+  }
+
+  .typed-line { white-space: normal; }
+  .section { padding: 70px 6%; }
+
+  .hero-grid {
+    grid-template-columns: 1fr;   /* ek column ban jayega */
+    text-align: center;
+  }
+  .photo-wrap { order: -1; max-width: 220px; }  /* photo upar aa jayega */
+  .badge { font-size: 0.7rem; padding: 6px 10px; }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

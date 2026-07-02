@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAIRAB SATTI — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portfolio.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <!-- IDE-style top bar: "tabs" look, jaise VS Code ke open files -->
+  <nav class="navbar">
+    <div class="nav-logo">MAIRAB<span class="dot">.</span>dev</div>
+    <ul class="nav-links">
+      <li><a href="#about">about.js</a></li>
+      <li><a href="#skills">skills.js</a></li>
+      <li><a href="#projects">projects.js</a></li>
+      <li><a href="#resume">resume.pdf</a></li>
+      <li><a href="#contact">contact.js</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <!-- ============ HERO / ABOUT ============ -->
+  <!-- Do column layout: left = terminal (text), right = photo card -->
+  <section id="about" class="hero">
+    <div class="hero-grid">
+
+      <!-- LEFT: terminal window -->
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="tdot red"></span><span class="tdot yellow"></span><span class="tdot green"></span>
+          <span class="terminal-title">visitor@mairab-portfolio: ~</span>
+        </div>
+        <div class="terminal-body">
+          <p><span class="prompt">$</span> whoami</p>
+          <h1 id="typedText" class="typed-line"></h1>
+          <p class="hero-sub">Frontend Developer • HTML · CSS · JavaScript</p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">See My Work</a>
+            <a href="#contact" class="btn btn-outline">Let's Talk</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: photo card, tilts with mouse movement (see script.js) -->
+      <div class="photo-wrap" id="photoWrap">
+        <div class="photo-glow"></div>
+        <img src="profile.jpg.jpg" alt="Mairab Satti" class="photo-img">
+        <!-- Floating badges — apni skills ke hisaab se icon/text badal do -->
+        <span class="badge badge-1">💻 Code</span>
+        <span class="badge badge-2">🎨 Design</span>
+        <span class="badge badge-3">⚡ Fast</span>
+        <span class="badge badge-4">🌐 Web</span>
+        <span class="badge badge-5">📱 Mobile</span>
+        <span class="badge badge-6">☁️ Cloud</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills" class="section">
+    <h2 class="section-title"><span class="tag">&lt;skills&gt;</span></h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <h3>HTML5</h3>
+        <div class="bar"><div class="bar-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>CSS3</h3>
+        <div class="bar"><div class="bar-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>JavaScript</h3>
+        <div class="bar"><div class="bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Responsive Design</h3>
+        <div class="bar"><div class="bar-fill" style="width:88%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects" class="section alt-bg">
+    <h2 class="section-title"><span class="tag">&lt;projects&gt;</span></h2>
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <div class="project-thumb">🧮</div>
+        <h3>Calculator App</h3>
+        <p>A clean calculator built with vanilla JS and CSS Grid.</p>
+        <div class="project-links">
+          <a href="#" target="_blank">Live Demo</a>
+          <a href="#" target="_blank">Source Code</a>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-thumb">✅</div>
+        <h3>To-Do List</h3>
+        <p>Task manager with localStorage so tasks persist on reload.</p>
+        <div class="project-links">
+          <a href="#" target="_blank">Live Demo</a>
+          <a href="#" target="_blank">Source Code</a>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-thumb">🌦️</div>
+        <h3>Weather App</h3>
+        <p>Fetches live weather data from an API using fetch().</p>
+        <div class="project-links">
+          <a href="#" target="_blank">Live Demo</a>
+          <a href="#" target="_blank">Source Code</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ RESUME ============ -->
+  <section id="resume" class="section">
+    <h2 class="section-title"><span class="tag">&lt;resume&gt;</span></h2>
+    <div class="resume-box reveal">
+      <p>Want the full breakdown of my experience and education?</p>
+
+      <!-- Preview: PDF seedha yahan render hoga, scrollable box mein -->
+      <iframe src="resume.pdf" class="resume-preview" title="Resume preview"></iframe>
+
+      <a href="resume.pdf" download class="btn btn-primary">⬇ Download Resume</a>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="section alt-bg">
+    <h2 class="section-title"><span class="tag">&lt;contact&gt;</span></h2>
+    <form class="contact-form reveal" id="contactForm">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+    <div class="socials">
+      <a href="#" target="_blank">GitHub</a>
+      <a href="#" target="_blank">LinkedIn</a>
+      <a href="mailto:you@example.com">Email</a>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <p>// built with HTML, CSS & JS — © 2026 mairab satti</p>
+  </footer>
+
+  <script src="portfolio.js"></script>
+</body>
+</html>
